@@ -13,8 +13,6 @@ function MyComponent() {
                 value.map((val, index) => (
                     <div key={index}>{val.title}
 
-
-
                         <button onClick={()=> {
                             const newTitle = prompt("enter new title", val.title) as string;
                             const newContent = prompt("enter new content", val.content) as string;
@@ -35,7 +33,9 @@ function MyComponent() {
             <input type="text" value={content} onChange={(event) => setContent(event.target.value)}
                    placeholder="content"></input>
             <button onClick={() => {
-                setValue([...value, {title: title, content: content}])
+                if (title !== "" && content !== "") {
+                    setValue([...value, {title: title, content: content}])
+                }
                 setTitle("")
                 setContent("")
             }}>
