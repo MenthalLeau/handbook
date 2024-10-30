@@ -8,8 +8,9 @@ function MyComponent() {
     const {value, setValue} = useContext(MyContext);
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
-    const [password, setPassword] = useState("")
-    const [passwordGiven, setPasswordGiven] = useState(false)
+    const [password, setPassword] = useState("");
+    const [passwordGiven, setPasswordGiven] = useState(false);
+    const [resetKey,setResetKey] = useState(0);
 
     return (
         <div>
@@ -31,9 +32,10 @@ function MyComponent() {
                 value.map((val, index) => (
                     <div key={index}>{val.title}
 
-                        <SeeTheMessage title={val.title} content={val.content} password={password}/>
+                        <SeeTheMessage key={resetKey} content={val.content} password={password}/>
 
                         <button onClick={()=> {
+                            setResetKey(resetKey + 1);
                             const newTitle = prompt("enter new title", val.title) as string;
                             const newContent = prompt("enter new content", val.content) as string;
                             let updatedValue = [...value];
@@ -48,19 +50,21 @@ function MyComponent() {
                     </div>
                 ))
             }
-            <input type="text" value={title} onChange={(event) => setTitle(event.target.value)}
-                   placeholder="title"></input>
-            <input type="text" value={content} onChange={(event) => setContent(event.target.value)}
-                   placeholder="content"></input>
-            <button onClick={() => {
-                if (title !== "" && content !== "" && password !== "") {
-                    setValue([...value, {title: title, content: CryptoJS.AES.encrypt(content, secret_key).toString()}])
-                    setTitle("")
-                    setContent("")
-                }
-            }}>
-                ajoute
-            </button>
+            {
+                passwordGiven && <>
+                <div>
+                    <input type="text" onChange={(event) => setTitle(event.target.value)}
+                        placeholder="title">
+                    </input>
+                    <input type="text" onChange={(event) => setContent(event.target.value)}
+                        placeholder="content">
+                    </input>
+                    <button onClick={() => {
+                        setValue([...value, {title: title, content: CryptoJS.AES.encrypt(content, secret_key).toString()}])
+                    }}>ajoute</button>
+                </div>
+                </>
+            }
         </div>
     )
 }

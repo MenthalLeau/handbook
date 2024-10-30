@@ -1,10 +1,16 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import CryptoJS from 'crypto-js';
 
-export default function SeeTheMessage({ title, content, password } : any) {
+export default function SeeTheMessage({ key, content, password } : any) {
     const [buttonView, setButtonView] = useState(false)
     const [passwordFound, setPasswordFound] = useState(false)
     const [passwordTest, setPasswordTest] = useState("")
+
+    useEffect(() => {
+    setButtonView(false)
+    setPasswordFound(false)
+    setPasswordTest("")
+    }, [key])
 
     return (
         <>
