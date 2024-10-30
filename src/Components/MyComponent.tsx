@@ -1,17 +1,37 @@
 import { useContext, useState } from 'react';
 import {message, MyContext} from './context';
+import CryptoJS from 'crypto-js';
+import SeeTheMessage from './seeTheMessage';
 
 function MyComponent() {
+    const secret_key = 'laclesecrete'
     const {value, setValue} = useContext(MyContext);
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
+    const [password, setPassword] = useState("")
+    const [passwordGiven, setPasswordGiven] = useState(false)
 
     return (
         <div>
             <h1>Journal intime</h1>
             {
+                !passwordGiven && <>
+                <div>
+                <input type="password" onChange={(event) => setPassword(event.target.value)}
+                    placeholder="password">
+                    </input>
+                    <button onClick={() => {
+                        setPasswordGiven(true)
+                        setPassword(CryptoJS.AES.encrypt(password, secret_key).toString())
+                    }}>Set the password</button>
+                </div>
+                </>
+            }
+            {
                 value.map((val, index) => (
                     <div key={index}>{val.title}
+
+                        <SeeTheMessage title={val.title} content={val.content} password={password}/>
 
                         <button onClick={()=> {
                             const newTitle = prompt("enter new title", val.title) as string;
@@ -33,11 +53,11 @@ function MyComponent() {
             <input type="text" value={content} onChange={(event) => setContent(event.target.value)}
                    placeholder="content"></input>
             <button onClick={() => {
-                if (title !== "" && content !== "") {
-                    setValue([...value, {title: title, content: content}])
+                if (title !== "" && content !== "" && password !== "") {
+                    setValue([...value, {title: title, content: CryptoJS.AES.encrypt(content, secret_key).toString()}])
+                    setTitle("")
+                    setContent("")
                 }
-                setTitle("")
-                setContent("")
             }}>
                 ajoute
             </button>

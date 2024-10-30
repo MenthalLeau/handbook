@@ -1,8 +1,8 @@
-import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import App from './App';
+import {act} from 'react';
 
-test('renders heading 1', () => {
+test('renders title', () => {
   render(<App />);
   const linkElement = screen.getByText(/journal intime/i);
   expect(linkElement).toBeInTheDocument();
@@ -14,17 +14,21 @@ test ('renders add button', () => {
   expect(addButton).toBeInTheDocument();
 });
 
-test ('renders edit button', () => {
-  render(<App />);
+test ('add element and test if edit and delete button exists', () => {
+  render(<App />)
+  const fieldTitle = screen.getByPlaceholderText('title')
+  const fieldContent = screen.getByPlaceholderText('content')
+  const addButton = screen.getByText(/ajoute/i);
+  fireEvent.change(fieldTitle, { target: { value : "Oui"}})
+  fireEvent.change(fieldContent, { target: { value : "Non"}})
+  act(() => {
+    addButton.click()
+  })
   const editButton = screen.getByText(/edit/i);
-  expect(editButton).toBeInTheDocument();
-});
-
-test ('renders delete button', () => {
-    render(<App />);
-    const deleteButton = screen.getByText(/delete/i);
-    expect(deleteButton).toBeInTheDocument();
-});
+  const deleteButton = screen.getByText(/delete/i);
+  expect(fieldTitle).toBeInTheDocument();
+  expect(deleteButton).toBeInTheDocument();
+})
 
 test ('renders title input', () => {
     render(<App />);
