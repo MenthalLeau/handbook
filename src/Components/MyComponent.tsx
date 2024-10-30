@@ -2,6 +2,7 @@ import { useContext, useState } from 'react';
 import {message, MyContext} from './context';
 import CryptoJS from 'crypto-js';
 import SeeTheMessage from './seeTheMessage';
+import EditTheMessage from './editTheMessage';
 
 function MyComponent() {
     const secret_key = 'laclesecrete'
@@ -34,14 +35,15 @@ function MyComponent() {
 
                         <SeeTheMessage key={resetKey} content={val.content} password={password}/>
 
-                        <button onClick={()=> {
+                        <EditTheMessage t={title} c={content} password={password} value={value} setValue={setValue} resetKey={resetKey} setResetKey={setResetKey} index={index}/>
+                        {/* <button onClick={()=> {
                             setResetKey(resetKey + 1);
                             const newTitle = prompt("enter new title", val.title) as string;
                             const newContent = prompt("enter new content", val.content) as string;
                             let updatedValue = [...value];
                             updatedValue[index] = {title: newTitle, content: newContent};
                             setValue(updatedValue);
-                        }}>edit</button>
+                        }}>edit</button> */}
 
 
                         <button onClick={() => {
